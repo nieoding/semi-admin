@@ -57,7 +57,7 @@ export default function Index() {
                 items={menus}
                 onSelect={handleNavigate}
                 header={{
-                    logo: <Avatar size="small" color="amber">{store.user.info && store.user.info.username[0]}</Avatar>,
+                    logo: <Avatar size="small" color="amber">{store.user.info && store.user.info.username && store.user.info.username[0]}</Avatar>,
                     text: store.user.info && store.user.info.username,
                 }}
                 isCollapsed={collapsed}

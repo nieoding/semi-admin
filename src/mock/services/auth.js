@@ -1,6 +1,5 @@
 import { AuthenticationFailed, noAuth } from '../util'
 import jwt from 'jsonwebtoken'
-
 const SECRET_KEY = 'HelloWorld'
 const TOKEN_TIMEOUT = 60 * 60 //TOken过期时间
 
@@ -58,9 +57,9 @@ function logout(request){
   return [200, {}]
 }
 
-const routers = {
- "POST /api/auth/login/": noAuth(login),
- "GET /api/auth/userinfo/": userinfo,
- "POST /api/auth/logout/": noAuth(logout),
-}
+const routers = [
+  ["POST", "/api/auth/login/", noAuth(login)],
+  ["GET", "/api/auth/userinfo/", userinfo],
+  ["POST", "/api/auth/logout/", noAuth(logout)],
+]
 export default routers
