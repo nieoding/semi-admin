@@ -13,6 +13,9 @@ export default function Index(){
   const location = useLocation()
   const [submitting, setSubmitting] = React.useState(false)
   const refForm = React.useRef<Form>(null)
+  React.useEffect(()=>{
+    document.title = `${store.app.siteName} - 系统登录`
+  },[store.app.siteName])
   async function handleSubmit(values:any){
     setSubmitting(true)
     const params = Object.assign({}, values)

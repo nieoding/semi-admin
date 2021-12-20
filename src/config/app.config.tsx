@@ -5,6 +5,6 @@ export type App = {
 
 const defaultConfig: App = {
   dark: 'light',
-  siteName: 'Semi Design Admin'
+  siteName: 'Semi Admin'
 }
 export {defaultConfig}

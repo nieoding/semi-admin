@@ -21,6 +21,15 @@ export default function Index() {
     const menu = getMenu(menus, currentKey)
     return menu ? generateCrumbs(menu) : []
   },[currentKey, menus])
+  React.useEffect(() => {
+    const menu = findMenuByPathname(menus, window.location.pathname)
+    if(menu){
+      setCurrentKey(menu.itemKey)
+      document.title = `${store.app.siteName} - ${menu.text}`
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menus, window.location.pathname])
 
   function handleRefresh () {
     navigate('refresh', {state:{from: location.pathname},replace:true})
@@ -43,10 +52,7 @@ export default function Index() {
       })()
     }})
   }
-  React.useEffect(() => {
-    const menu = findMenuByPathname(menus, window.location.pathname)
-    menu && setCurrentKey(menu.itemKey)
-  }, [menus])
+
 
   return (
     <Layout style={{ border: '1px solid var(--semi-color-border)' }}>

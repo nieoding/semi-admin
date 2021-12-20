@@ -1,22 +1,10 @@
 import { AuthenticationFailed, noAuth } from '../util'
 import jwt from 'jsonwebtoken'
-const SECRET_KEY = 'HelloWorld'
-const TOKEN_TIMEOUT = 60 * 60 //TOken过期时间
+import users from '../models/user'
 
-const users = [
-  {
-    id: 1,
-    username: 'admin',
-    password: 'admin',
-    role: 'admin',
-  },
-  {
-    id: 2,
-    username: 'guest',
-    password: 'guest',
-    role: 'guest',
-  }
-]
+const SECRET_KEY = 'HelloWorld'
+const TOKEN_TIMEOUT = 60 * 60 //TOken过期时间 1小时
+
 
 export function parseUserFromHeader(header){
   const info = header.Authorization
@@ -56,6 +44,7 @@ function logout(request){
   }
   return [200, {}]
 }
+
 
 const routers = [
   ["POST", "/api/auth/login/", noAuth(login)],

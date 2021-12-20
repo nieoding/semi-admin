@@ -5,7 +5,6 @@ export default function Index(){
   const location = useLocation()
   React.useEffect(() =>{
     navigate(location.state.from,{replace:true})
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
-  return <div></div>
+  },[navigate, location.state.from])
+  return <React.Fragment/>
 }
