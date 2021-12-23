@@ -16,7 +16,7 @@
 ## 安装
 
 ```bash
-git clone ...
+git clone https://github.com/nieoding/semi-admin.git my-project
 cd my-project
 yarn install
 ```
