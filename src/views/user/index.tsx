@@ -28,7 +28,7 @@ export default function Index(){
       }
     },
     {
-      render: (_:any,record:service.User)=><ButtonGroup theme="borderless">
+      render: (record:service.User)=><ButtonGroup theme="borderless">
         <Button onClick={()=>handleEdit(record)}>编辑</Button>
         <Popconfirm title="确认删除？" position="left" content="此操作不可逆" onConfirm={() => {handleDelete(record)}}>
           <Button theme="borderless" type="danger">删除</Button>

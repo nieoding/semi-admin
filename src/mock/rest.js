@@ -1,5 +1,7 @@
 import { NotFound } from "./util"
+import { ModelSerializer } from "./serializers"
 const Mock = require('mockjs')
+
 export class ModelViewSet {
   model = null
   queryset = []
@@ -9,17 +11,36 @@ export class ModelViewSet {
   lookup_field = 'id'
   ordering = ['-id']
 
+  serializer_class = ModelSerializer
+  list_serializer_class = ModelSerializer
+
   _filter_queryset = (request, source) => {
     return source.filter(item=>{
-      for(let i=0;i<this.filterset_fields.length;i++){
-        const fieldName = this.filterset_fields[i]
-        const value = request.params[fieldName]
-        if(value!==undefined  && item[fieldName]!==value){return false}
+      for(const field of this.filterset_fields){
+        if(field.includes('@daterange')){
+          // daterange处理
+          let fieldName = field.replace('@daterange','')
+          const dateBegin = request.params[`${fieldName}_after`]
+          const dateEnd = request.params[`${fieldName}_before`]
+          if(dateBegin && item[fieldName]<dateBegin){return false}
+          if(dateEnd && item[fieldName]>dateEnd){return false}
+        } else {
+          // 普通匹配
+          const value = request.params[field]
+          if(value!==undefined  && item[field].toString()!==value.toString()){return false}  
+        }
       }
       if(request.params.search){
         for(let i=0;i<this.search_fields.length;i++){
           const fileName = this.search_fields[i]
           const value = item[fileName]
+          if(value){
+            if(Array.isArray(value)){
+              if(value.find(item => {return item.includes(request.params.search)})){return true}
+            } else {
+              if(value.includes(request.params.search)){return true}
+            }
+          }
           if(value && value.indexOf(request.params.search)>=0){return true}
         }
         return false
@@ -28,9 +49,10 @@ export class ModelViewSet {
       }
     })
   }
-  _sort_queryset = (source) => {
+  _sort_queryset = (request, source) => {
     let res = [...source]
-    this.ordering.forEach(item=>{
+    const ordering = request.params.ordering ? request.params.ordering.split(',') : this.ordering
+    ordering.forEach(item=>{
       const ar = item.split('-')
       const dec = ar.length===2
       const field = ar[ar.length-1]
@@ -45,18 +67,16 @@ export class ModelViewSet {
     })
     return res
   }
-  _serialize = (data) => {
+  _get_serializer = (serializer_class, data, many) => {
+    return new serializer_class(this._meta(), data, many)
+  }
+  _meta = () => {
+    // 尝试用记录集的第一条记录作为元数据解析（简易化）
     if(this.queryset.length ===0){
-      return {data}
+      return null
+    } else {
+      return Object.keys(this.queryset[0])
     }
-    const fields =Object.keys(this.queryset[0])
-    const res = {}
-    Object.keys(data).forEach(key=>{
-      if(fields.indexOf(key)>=0){
-        res[key] = data[key]
-      }
-    })
-    return {data:res}
   }
   _paginate_queryset = (request, source) => {
     const {pageNo=1, pageSize=10} = request.params
@@ -65,7 +85,7 @@ export class ModelViewSet {
       pageNo: pageNo,
       pageSize: pageSize,
       totalCount: source.length,
-      data: data
+      data: this._get_serializer(this.list_serializer_class).serialize(data, true)
     }]
   }
   _find_pk = (request) => {
@@ -81,18 +101,18 @@ export class ModelViewSet {
   }
 
   list = (request) => {
-    const queryset = this._sort_queryset(this._filter_queryset(request, this.queryset))
+    const queryset = this._sort_queryset(request, this._filter_queryset(request, this.queryset))
     return this.paginate_enabled ? this._paginate_queryset(request, queryset) : [200, queryset]
   }
   create = (request) => {
-    const serialize = this._serialize(request.data)
-    serialize.data[this.lookup_field] = Mock.mock('@increment')
-    this.queryset.push(serialize.data)
-    return [201,serialize.data]
+    const data = this._get_serializer(this.serializer_class).serialize(request.data, false)
+    data[this.lookup_field] = Mock.mock('@increment')
+    this.queryset.push(data)
+    return [201, data]
   }
   retrive = (request) => {
     const instance = this._get_object(request)
-    return [200, instance]
+    return [200, this._get_serializer(this.serializer_class).serialize(instance, false)]
   }
   destroy = (request) => {
     const instance = this._get_object(request)
@@ -100,10 +120,19 @@ export class ModelViewSet {
     return [204,{}]
   }
   update = (request) => {
-    const serialize = this._serialize(request.data)
+    const data = this._get_serializer(this.serializer_class).serialize(request.data, false)
     const instance = this._get_object(request)
-    Object.assign(instance,serialize.data)
+    Object.assign(instance,data)
     return [200, instance]
+  }
+
+  _build_matcher = (detail=false, action=null) => {
+    const ext = action ? `${action}/` : ''
+    if(!detail){
+      return `/api/${this.model}/${ext}`
+    } else {
+      return new RegExp(`/api/${this.model}/\\d+/${ext}`)
+    }
   }
   
   routers = () => {
@@ -111,12 +140,20 @@ export class ModelViewSet {
       console.warn(`${this.constructor.name}未设置modal字段，无法输出rest接口`)
       return {}
     }
-    return [
-      ['GET', `/api/${this.model}/`, this.list],
-      ['GET', new RegExp(`/api/${this.model}/\\d+/`), this.retrive],
-      ['POST', `/api/${this.model}/`, this.create],
-      ['DELETE', new RegExp(`/api/${this.model}/\\d+/`), this.destroy],
-      ['PATCH', new RegExp(`/api/${this.model}/\\d+/`), this.update],
+    const res = [
+      ['GET', this._build_matcher(), this.list],
+      ['GET', this._build_matcher(true), this.retrive],
+      ['POST', this._build_matcher(), this.create],
+      ['DELETE', this._build_matcher(true), this.destroy],
+      ['PATCH', this._build_matcher(true), this.update],
     ]
+    Object.entries(this).forEach(item => {
+      const func = item[1]
+      if(func.action){
+        const {method, name, detail} = func.action
+        res.push([method, this._build_matcher(detail,name), func])
+      }
+    })
+    return res
   }
 }

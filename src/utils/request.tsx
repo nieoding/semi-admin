@@ -10,6 +10,7 @@ const conf: AxiosRequestConfig = {
 }
 const request:AxiosInstance = axios.create(conf)
 let intercrepted = false
+let errorHeppened = false
 
 function useAjaxEffect() {
   const {dispatch} = useStore()
@@ -27,12 +28,14 @@ function useAjaxEffect() {
   request.interceptors.response.use((response) => {
     return response.data
   }, (error) => {
-    if (error.response.status === 401 && (window.location.pathname !== LOGIN_PATH)) {
+    if (error.response.status === 401 && (window.location.pathname !== LOGIN_PATH) && !errorHeppened) {
       Notification.error({title:'系统错误', content: 'token过期'})
       setTimeout(() =>{
         dispatch({type:'LOGOUT'})
         window.location.reload()
+        errorHeppened = false
       }, 300)
+      errorHeppened = true
     }
     return Promise.reject(error)
   })

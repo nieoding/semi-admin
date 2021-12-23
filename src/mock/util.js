@@ -9,10 +9,22 @@ function wrapper(config, func){
     return func(config)
   }
   catch(e){
+    console.log(e)
     return [e.code || 500, e.message]
   }
 }
 
+export function randomChoice(source, count=1){
+  let tmp = [...source]
+  tmp.sort(()=>{return Math.random()-0.5})
+  return tmp.splice(0,count)
+}
+
+export function Action(func, name, method='POST', detail=false){
+  // 简易装饰器
+  func.action = {name, method, detail}
+  return func
+}
 export function noAuth(func){
     func.noauth=true
     return func

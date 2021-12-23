@@ -19,13 +19,14 @@ interface FilterField extends BasicField{
   render?: Function
   choices?: OptionProps[]
 }
+export interface FilterOption {
+  advance?:boolean,
+  search?:BasicField,
+  fields?: Array<FilterField>
+}
 interface FilterFormProps{
   onSubmit: (params:Record<string,any>) => void,
-  option?:{
-    advance?:boolean,
-    search?:BasicField,
-    fields?: Array<FilterField>
-  }
+  option?: FilterOption
 }
 
 function formatDate(val:string){
@@ -69,7 +70,7 @@ export default function FilterForm(props: FilterFormProps){
     else if(field.type === 'custom'){
       return field.render && field.render(submitForm)
     }
-    return <Form.Select placeholder={field.placeholder} field={field.name||''} label={field.label} style={{width:'100%'}} onChange={submitForm} showClear optionList={field.choices||[]}/>
+    return <Form.Select placeholder={field.placeholder||'全部'} field={field.name||''} label={field.label} style={{width:'100%'}} onChange={submitForm} showClear optionList={field.choices||[]}/>
   }
   function renderFields(){
     if (!props.option|| !props.option.fields){
