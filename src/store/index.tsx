@@ -3,7 +3,9 @@ import * as storeUser from "./user"
 import * as storeApp from "./app"
 
 type Store= {
+  /** 用户信息 */
   user: storeUser.User,
+  /** 应用信息 */
   app: storeApp.App,
   // 扩展
 }

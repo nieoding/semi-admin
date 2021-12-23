@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import 'nprogress/nprogress.css'
 import reportWebVitals from './reportWebVitals';
+import './mock' //使用proxy，需要人工删除此行
 ReactDOM.render(
   <React.StrictMode>
     <App />

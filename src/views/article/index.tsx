@@ -180,7 +180,7 @@ export default function Index(){
     Toast.success(`${selectKeys.length}条记录已删除`)
     refreshData(true)
   }
-  async function handleAction(value:string){
+  async function handleAction(value:any){
     if(selectKeys.length===0){
       return
     }

@@ -8,24 +8,37 @@ const DATERANGE_PREFIX = '@daterange_'
 const DATE_PREFIX = '@date_'
 
 interface BasicField{
+  /** 间距 */
   span?: number,
+  /** 字段名 */
   name?: string,
+  /** 显示名称 */
   label?: string,
+  /** 占位符 */
   placeholder?: string
 }
 interface FilterField extends BasicField{
+  /** 是否扩展字段，扩展字段只有在展开时显示 */
   advance?: boolean
+  /** 字段类型，默认是下拉选择，支持日期、日期范围、自定义 */
   type?: 'daterange'|'date'|'custom'
+  /** 如果type=custom，使用render来渲染 */
   render?: Function
+  /** 选择项， 格式：{value:'', label:''} */
   choices?: OptionProps[]
 }
 export interface FilterOption {
+  /** 是否有展开/收起功能 */
   advance?:boolean,
+  /** 搜索框配置 */
   search?:BasicField,
+  /** 筛选项列表 */
   fields?: Array<FilterField>
 }
 interface FilterFormProps{
+  /** 筛选提交回调 */
   onSubmit: (params:Record<string,any>) => void,
+  /** 配置项 */
   option?: FilterOption
 }
 

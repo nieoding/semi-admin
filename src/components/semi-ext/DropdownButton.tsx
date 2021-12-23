@@ -1,16 +1,17 @@
 import React from 'react'
 import { SplitButtonGroup, Button, Dropdown } from "@douyinfe/semi-ui"
 import { IconTreeTriangleDown } from '@douyinfe/semi-icons'
+import { OptionProps } from '@douyinfe/semi-ui/lib/es/select'
 
 interface DropdownButtonProps{
   value?: string,
-  menus: Array<{value:string, label?:string}>,
-  onClick: (value:string) => void,
+  menus: OptionProps[],
+  onClick: (value?:string|number) => void,
   loading?: boolean
 }
 export default function DropdownButton(props:DropdownButtonProps){
   const [value, setValue] = React.useState(props.value || (props.menus && props.menus[0].value))
-  const label:string|undefined = React.useMemo(()=>{
+  const label:React.ReactNode = React.useMemo(()=>{
     const menu = props.menus.find(item=>item.value===value)
     return menu && menu.label
   },[value, props.menus])

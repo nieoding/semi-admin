@@ -8,8 +8,6 @@ import { renderRouter} from '@/utils/router';
 import LoginView from '@/views/login'
 import NofoundView from '@/views/404'
 import AppLayout from '@/layouts/app'
-import './mock' //发布移动到index，放这里为了方便热更新
-
 
 function AppRoutes(){
   return (

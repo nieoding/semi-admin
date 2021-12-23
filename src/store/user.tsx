@@ -3,8 +3,11 @@ import {asyncRouters, RouterItem} from '@/config/router.config'
 import {filterRouters} from '@/utils/router'
 
 type UserInfo = {
+  /** ID */
   id: number,
+  /** 用户名 */
   username: string,
+  /** 权限 */
   role: string
 }
 export type User = {

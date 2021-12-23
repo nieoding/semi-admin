@@ -6,7 +6,7 @@ const queryset = []
 const count = 20
 for (let i = 0; i < count; i++) {
   queryset.push(Mock.mock({
-    id: '@increment',
+    id: i+1,
     create_time: '@datetime',
     author: '@cname',
     title: '@ctitle',
