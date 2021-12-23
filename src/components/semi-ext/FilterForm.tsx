@@ -23,7 +23,7 @@ interface FilterField extends BasicField{
   /** 字段类型，默认是下拉选择，支持日期、日期范围、自定义 */
   type?: 'daterange'|'date'|'custom'
   /** 如果type=custom，使用render来渲染 */
-  render?: Function
+  render?: (submit: Function) => React.ReactNode
   /** 选择项， 格式：{value:'', label:''} */
   choices?: OptionProps[]
 }
@@ -48,8 +48,10 @@ function formatDate(val:string){
 
 export default function FilterForm(props: FilterFormProps){
   const roleForm = React.useRef<Form>(null)
+  const [values, setValues] = React.useState<Record<string,any>>()
   const [advance, setAdvance] = React.useState<boolean>(false)
   function handleSubmit(values: Record<string,any>){
+    setValues(values)
     const params:Record<string,any> = {}
     Object.entries(values).forEach(item =>{
       const key = item[0]
@@ -75,15 +77,15 @@ export default function FilterForm(props: FilterFormProps){
   }
   function renderField(field: FilterField){
     if (field.type === 'daterange'){
-      return <Form.DatePicker style={{width:'100%'}} placeholder={field.placeholder} field={`${DATERANGE_PREFIX}${field.name}`} label={field.label||field.name} type="dateRange" onChange={submitForm}/>
+      return <Form.DatePicker initValue={values && field.name && values[`${DATERANGE_PREFIX}${field.name}`]} style={{width:'100%'}} placeholder={field.placeholder} field={`${DATERANGE_PREFIX}${field.name}`} label={field.label||field.name} type="dateRange" onChange={submitForm}/>
     }
     else if(field.type === 'date'){
-      return <Form.DatePicker style={{width:'100%'}}  placeholder={field.placeholder} field={`${DATE_PREFIX}${field.name}`} label={field.label||field.name} onChange={submitForm}/>
+      return <Form.DatePicker initValue={values && field.name && values[`${DATE_PREFIX}${field.name}`]}  style={{width:'100%'}}  placeholder={field.placeholder} field={`${DATE_PREFIX}${field.name}`} label={field.label||field.name} onChange={submitForm}/>
     }
     else if(field.type === 'custom'){
       return field.render && field.render(submitForm)
     }
-    return <Form.Select placeholder={field.placeholder||'全部'} field={field.name||''} label={field.label} style={{width:'100%'}} onChange={submitForm} showClear optionList={field.choices||[]}/>
+    return <Form.Select initValue={values && field.name && values[field.name]}  placeholder={field.placeholder||'全部'} field={field.name||''} label={field.label} style={{width:'100%'}} onChange={submitForm} showClear optionList={field.choices||[]}/>
   }
   function renderFields(){
     if (!props.option|| !props.option.fields){
