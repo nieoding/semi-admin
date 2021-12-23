@@ -1,46 +1,84 @@
-# Getting Started with Create React App
+<h1 align="center">Semi-Admin</h1>
+<div align="center">基于 <a href="https://semi.design/zh-CN/">Semi-Design</a> 实现的后台脚手架，具备 路由/登录/权限/mock等基本功能</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 依赖
 
-## Available Scripts
+> react v17.0.2
+> 
+> typescript v4.5.3
+> 
+> semi-disign v2.1.5
+> 
+> react-router  v6
+> 
+> axios v0.24.0
 
-In the project directory, you can run:
+## 安装
 
-### `npm start`
+```bash
+git clone ...
+cd my-project
+yarn install
+```
+国内网络可使用cnpm淘宝镜像加速安装
+```bash
+npm install -g cnpm --registry=https://registry.npm.taobao.org
+cnpm install
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 运行
+```
+npm run start
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 界面截图
 
-### `npm test`
+> 登录
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![image](https://gitee.com/django-extend/photowall/raw/master/semi/semi-login.png)
 
-### `npm run build`
+> 列表页
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![image](https://gitee.com/django-extend/photowall/raw/master/semi/semi-index.png)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+> 编辑页
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![image](https://gitee.com/django-extend/photowall/raw/master/semi/semi-edit.png)
 
-### `npm run eject`
+## 目录结构
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+.
+├── README.md
+├── config-overrides.js             # 扩展配置（alias在这里配置）
+├── package-lock.json               
+├── package.json                    # 基础项目配置
+├── public
+├── src
+│   ├── App.test.tsx
+│   ├── App.tsx                     # 入口程序
+│   ├── api                         # 远程接口
+│   ├── components
+│   │   └── semi-ext                # semi扩展库
+│   ├── config
+│   │   ├── app.config.tsx          # 应用配置
+│   │   └── router.config.tsx       # 路由配置
+│   ├── index.css
+│   ├── index.tsx
+│   ├── layouts
+│   │   ├── app.tsx                 # 登录态页面布局
+│   │   └── blank.tsx               # 非登录态页面布局
+│   ├── mock                        # 本地mock数据
+│   ├── react-app-env.d.ts
+│   ├── reportWebVitals.ts
+│   ├── setupTests.ts
+│   ├── store                       # 共享数据
+│   ├── utils
+│   │   ├── auth.tsx                # 权限相关
+│   │   ├── request.tsx             # axios封装
+│   │   ├── router.tsx              # 路由、菜单相关
+│   │   └── theme.tsx               # 换肤
+│   └── views                       # 页面目录
+├── tsconfig.json
+└── tsconfig.paths.json             # alias在这里配置（IDE需要使用）
+```
