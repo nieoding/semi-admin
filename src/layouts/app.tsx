@@ -35,6 +35,7 @@ export default function Index() {
     navigate('refresh', {state:{from: location.pathname},replace:true})
   }
   function handleNavigate(data:any) {
+    console.log(data)
     setCurrentKey(data.itemKey)
     const menu = getMenu(menus, data.itemKey)
     menu && navigate(menu.path)

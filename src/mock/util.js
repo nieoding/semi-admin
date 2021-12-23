@@ -9,7 +9,6 @@ function wrapper(config, func){
     return func(config)
   }
   catch(e){
-    console.log(e)
     return [e.code || 500, e.message]
   }
 }

@@ -149,7 +149,6 @@ export default function Index(){
   },[selectKeys])
   async function fetchData(params: any[]){
     const requestParameters = Object.assign({}, params, queryParams)
-    console.log(requestParameters)
     return await service.list(requestParameters)
   }
   function handleSubmitFilter(values:Record<string,any>){
