@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconHome, IconUser, IconApps } from '@douyinfe/semi-icons'
+import { IconHome, IconApps } from '@douyinfe/semi-icons'
 
 export type RouterItem = {
   name: string,
@@ -30,16 +30,23 @@ const asyncRouters:Array<RouterItem> = [
     hidden: true
   },
   {
-    path: 'user',
-    name: 'user',
-    component: React.lazy(() => import('@/views/user')),
-    meta: { title: '用户管理', icon: <IconUser/>, permission:['admin']}
-  },
-  {
-    path: 'article',
-    name: 'article',
-    component: React.lazy(() => import('@/views/article')),
-    meta: { title: '新闻管理', icon: <IconApps />}
+    path: 'demo',
+    name: 'demoShow',
+    meta: { title: '范例演示', icon: <IconApps/>},
+    children: [
+      {
+        path: 'user',
+        name: 'user',
+        component: React.lazy(() => import('@/views/user')),
+        meta: { title: '原生 - 用户管理', permission:['admin']}
+      },
+      {
+        path: 'article',
+        name: 'article',
+        component: React.lazy(() => import('@/views/article')),
+        meta: { title: '扩展 - 新闻管理'}
+      }
+    ]
   }
 ]
 
