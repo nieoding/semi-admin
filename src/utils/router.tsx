@@ -29,8 +29,9 @@ export function filterRouters(source: Array<RouterItem>|undefined, role: string)
   const res: Array<RouterItem> = []
   source.forEach(item => {
     if(hasPermission(item, role)){
-      res.push(item)
-      item.children && (item.children = filterRouters(item.children, role))
+      const cloneItem = Object.assign({}, item)
+      res.push(cloneItem)
+      item.children && (cloneItem.children = filterRouters(item.children, role))
     }
   })
   return res
