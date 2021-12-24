@@ -4,7 +4,9 @@ export default function Index(){
   const navigate = useNavigate()
   const location = useLocation()
   React.useEffect(() =>{
-    navigate(location.state.from,{replace:true})
-  },[navigate, location.state.from])
+    const state: any = location.state
+    navigate(state.from,{replace:true})
+     // eslint-disable-next-line
+  },[])
   return <React.Fragment/>
 }

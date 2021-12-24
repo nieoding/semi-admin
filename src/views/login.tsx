@@ -26,7 +26,8 @@ export default function Index(){
       Toast.error(err.response.data)
     } else {
       window.localStorage['access-token'] = res.token
-      navigate(location.state ? location.state.from: '/')
+      const state: any = location.state
+      navigate(state ? state.from: '/')
     }
   }
   return (
