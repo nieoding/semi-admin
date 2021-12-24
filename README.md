@@ -26,14 +26,22 @@ npm install -g cnpm --registry=https://registry.npm.taobao.org
 cnpm install
 ```
 
-## 运行
-```
+## 指令
+
+```bash
+# 运行
 npm run start
+# 发布
+npm run build
+# 发布包分析
+npm run build --report
 ```
 
 ## 界面截图
 
 > 登录
+
+登录账号 admin/admin
 
 ![image](https://gitee.com/django-extend/photowall/raw/master/semi/semi-login.png)
 
